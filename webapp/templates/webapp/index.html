@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title></title>
+	{% load static%}
+	<link rel="stylesheet" type="text/css" href="{%static 'semantic/dist/semantic.css' %}">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.0/semantic.js"></script>
+</head>
+<body>
+	<div class="ui centered container">
+
+		<div class="ui segment">
+			<form class="ui form" action="insert"  method="post">
+				{% csrf_token %}
+
+				<div class="five fields">
+
+                    <div class="field">
+                       <label>{{form.us_name.label}}:</label>
+                        {{form.us_name}}
+					</div>
+
+					<div class="field">
+                        <label>{{form.us_surname.label}}:</label>
+                        {{form.us_surname}}
+					</div>
+
+					<div class="field">
+                        <label>{{form.us_role.label}}:</label>
+                        {{form.us_role}}
+					</div>
+
+                    <div class="field">
+                        <label>{{form.us_id.label}}:</label>
+                        {{form.us_id}}
+
+                    </div>
+
+					<div class="field">
+						<input class= "ui button" type="submit" value="Submit">
+					</div>
+
+                </div>
+			</form>
+		</div>
+
+
+		<div class="ui inverted segment">
+			<table class="ui selectable centered inverted table">
+				<thead>
+					<tr>
+						<th>Meno</th>
+						<th>Priezvisko</th>
+						<th>Uloha</th>
+                        <th>ID</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for c in content %}
+
+
+				<tr>
+                    <td>{{c.us_id}}</td>
+				    <td>{{c.us_name}}</td>
+				    <td>{{c.us_surname}}</td>
+				    <td>{{c.us_role}}</td>
+
+				</tr>
+				{%endfor%}
+
+
+				</tbody>
+
+
+			</table>
+		</div>
+
+		<div class="ui inverted segment">
+				<p>text
+		</div>
+	</div>
+<script type="text/javascript">
+
+
+</script>
+</body>
+
+
+</html>

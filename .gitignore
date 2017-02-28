@@ -1,0 +1,7 @@
+/node_modules
+/projekt
+/manage.py
+/semantic.json
+/webapp/static/semantic/
+/webapp/migrations/
+/*/__pycache__

@@ -1,0 +1,5 @@
+.form li, .form div{
+    display: block;
+    float: left;
+    padding: 5px;
+}
