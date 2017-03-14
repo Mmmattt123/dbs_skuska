@@ -8,20 +8,15 @@ from . import selects, inserts, models, inputforms
 
 def index(request):
     print("index")
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form()})
+    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
 
 def insert(request):
-    print("som dnu")
+
     if request.POST:
         form =  inputforms.user_form(request.POST)
+
         if form.is_valid():
-
             form.save()
-
-
-
-
-
         # form.cleaned_data()
         # list = []
         # list.append(form.us_name)
@@ -31,4 +26,16 @@ def insert(request):
 
     #a.update(csrf(request))
 
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form()})
+    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+
+
+def delete(request):
+
+    if request.POST:
+        form = inputforms.delete_user(request.POST)
+
+        if form.is_valid():
+            user = models.user2.objects.filter( us_id = form.cleaned_data['us_id'])
+            user.delete()
+
+    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
