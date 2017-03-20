@@ -11,24 +11,12 @@ def index(request):
     return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
 
 def insert(request):
-    #print("som dnu")
+
     if request.POST:
         form =  inputforms.user_form(request.POST)
-        if form.is_valid():
 
+        if form.is_valid():
             form.save()
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form()})
-
-
-def delete(request):
-
-    if request.POST:
-        form = inputforms.delete_user(request.POST)
-        if form.is_valid():
-            user = models.user2.objects.get(pk = form.cleaned_data['us_id'])
-            user.delete()
-
-
 
         # form.cleaned_data()
         # list = []
@@ -39,4 +27,16 @@ def delete(request):
 
     #a.update(csrf(request))
 
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form()})
+    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+
+
+def delete(request):
+
+    if request.POST:
+        form = inputforms.delete_user(request.POST)
+
+        if form.is_valid():
+            user = models.user2.objects.filter( us_id = form.cleaned_data['us_id'])
+            user.delete()
+
+    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})

@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('webapp.urls')),
     url(r'^insert', include('webapp.urls')),
-    url(r'^delete', include('webapp.urls')),
+    url(r'^delete_user', include('webapp.urls')),
+
 ]

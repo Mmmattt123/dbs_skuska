@@ -5,3 +5,4 @@
 /webapp/static/semantic/
 /webapp/migrations/
 /*/__pycache__
+/mysite/settings.py
