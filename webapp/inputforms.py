@@ -4,6 +4,13 @@ from . import models
 
 class user_form(ModelForm):
 
-     class Meta():
-         model = models.user2
-         fields = ['us_name', 'us_surname', 'us_role']#, 'us_id']
+    class Meta():
+        model = models.user2
+        fields = ['us_name', 'us_surname', 'us_role']#, 'us_id']
+
+
+class delete_user(ModelForm):
+
+    class Meta():
+        model = models.user2
+        fields = ['us_id']

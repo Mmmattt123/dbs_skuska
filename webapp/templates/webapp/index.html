@@ -38,11 +38,28 @@
                     </div>
 
 					<div class="field">
-						<input class= "ui button" type="submit" value="Submit">
+						<input class= "ui button" name="form" type="submit" value="Submit">
 					</div>
 
                 </div>
 			</form>
+
+            <h2>VYMAZAT</h2>
+
+            <form class="ui form" action="delete" method="post">
+                {% csrf_token %}
+
+                <div class="two fields">
+                    <div class="field">
+                        <label>{{ form2.us_id.label }}:</label>
+                        {{ form2.us_id }}
+                    </div>
+                    <div class="field">
+                        <input class="ui button" name="form2" type="submit" value="Delete">
+                    </div>
+                </div>
+            </form>
+
 		</div>
 
 
