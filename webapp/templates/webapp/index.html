@@ -56,15 +56,18 @@
 
 		<div class="ui cards">
 
-				{% for c in content %}
+				{% for c in users %}
 					<div class="card">
 						<div class="content">
 
-							<div class="header"> {{c.us_name}} {{c.us_surname}}</div>
+							<div class="header"> {{c.us_name}}
+							</div>
 
-							<div class="meta"> {{c.us_id}} </div>
+							<div class="meta"> {{c.us_surname}}
+							</div>
 
-							<div class="description">{{c.us_role}}</div>
+							<div class="description"> Uloha: {{c.us_role}}
+							</div>
 
 						</div>
 					</div>

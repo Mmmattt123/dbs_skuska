@@ -8,7 +8,7 @@ from . import selects, inserts, models, inputforms
 
 def index(request):
     print("index")
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+    return render(request, 'webapp/index.html', {'users': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
 
 def insert(request):
 
@@ -27,7 +27,7 @@ def insert(request):
 
     #a.update(csrf(request))
 
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+    return render(request, 'webapp/index.html', {'users': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
 
 
 def delete(request):
@@ -39,4 +39,4 @@ def delete(request):
             user = models.user2.objects.filter( us_id = form.cleaned_data['us_id'])
             user.delete()
 
-    return render(request, 'webapp/index.html', {'content': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+    return render(request, 'webapp/index.html', {'users': selects.select_user(), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
