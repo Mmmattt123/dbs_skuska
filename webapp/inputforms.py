@@ -16,3 +16,10 @@ class user_form(ModelForm):
 class delete_user(forms.Form):
 
     us_id = forms.IntegerField()
+
+
+class next_company(forms.Form):
+
+
+
+    next_val = forms.IntegerField()

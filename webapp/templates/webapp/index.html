@@ -10,81 +10,71 @@
 </head>
 <body>
 	<div class="ui centered container">
+		<!--<div class="ui segment">-->
+			<!--<form class="ui form" action="insert"  method="post">-->
+				<!--{% csrf_token %}-->
+				<!--<div class="five fields">-->
 
-		<div class="ui segment">
-			<form class="ui form" action="insert"  method="post">
-				{% csrf_token %}
+                    <!--<div class="field">-->
+                       <!--<label>{{form.us_name.label}}:</label>-->
+                        <!--{{form.us_name}}-->
+					<!--</div>-->
 
-				<div class="five fields">
+					<!--<div class="field">-->
+                        <!--<label>{{form.us_surname.label}}:</label>-->
+                        <!--{{form.us_surname}}-->
+					<!--</div>-->
 
-                    <div class="field">
-                       <label>{{form.us_name.label}}:</label>
-                        {{form.us_name}}
-					</div>
+					<!--<div class="field">-->
+                        <!--<label>{{form.us_role.label}}:</label>-->
+                        <!--{{form.us_role}}-->
+					<!--</div>-->
 
-					<div class="field">
-                        <label>{{form.us_surname.label}}:</label>
-                        {{form.us_surname}}
-					</div>
+                    <!--<div class="field">-->
+                        <!--<label>{{form.us_id.label}}:</label>-->
+                        <!--{{form.us_id}}-->
+                    <!--</div>-->
 
-					<div class="field">
-                        <label>{{form.us_role.label}}:</label>
-                        {{form.us_role}}
-					</div>
+					<!--<div class="field">-->
+						<!--<input class= "ui button" name="form" type="submit" value="Submit">-->
+					<!--</div>-->
+                <!--</div>-->
+			<!--</form>-->
+		<!--</div>-->
 
-                    <div class="field">
-                        <label>{{form.us_id.label}}:</label>
-                        {{form.us_id}}
+        <div class="ui raised blue segment" style="overflow: hidden">
+            <h2 class="ui center aligned icon header"><i class="industry icon"></i> COMPANIES:</h2>
+            <div class="ui four cards">
+                {% for c in companies %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header"> {{c.company_name}}</div>
+                            <div class="description"> {{c.company_country}}</div>
+                        </div>
+                        <div class="extra content">
+                          <div class="ui two buttons">
+                            <div class="ui basic  blue button">MANAGER</div>
+                            <div class="ui basic  red button">DELETE</div>
+                          </div>
+                        </div>
 
                     </div>
-
-					<div class="field">
-						<input class= "ui button" name="form" type="submit" value="Submit">
-					</div>
-
-                </div>
-			</form>
-
-
-
-
-
-		</div>
-
-
-
-
-		<div class="ui cards">
-
-				{% for c in users %}
-					<div class="card">
-						<div class="content">
-
-							<div class="header"> {{c.us_name}}
-							</div>
-
-							<div class="meta"> {{c.us_surname}}
-							</div>
-
-							<div class="description"> Uloha: {{c.us_role}}
-							</div>
-
-						</div>
-					</div>
-				{% endfor %}
-
-		</div>
-
-		<div class="ui inverted segment">
-				<form class="ui form" action="delete_user" method="post">
-					{% csrf_token %}
-					<div>
-						<label> {{form2.us_id.label}} </label>
-						{{form2.us_id}}
-					</div>
-					<input type="submit" value="Delete" name="Delete" class="ui button" >
-				</form>
-		</div>
+                {% endfor %}
+            </div>
+            <div class="ui divider"></div>
+            <div class="">
+                <form action="previous_company" method="post">
+                    {% csrf_token%}
+                    <div hidden> {{previous_company_form}} </div>
+                    <button type="submit" value="Previous" name="Previous" class="ui left floated button"><i class="arrow left icon"></i> PREVIOUS</button>
+                </form>
+                <form action="next_company" method="post">
+                    {% csrf_token%}
+                    <div hidden> {{next_company_form}} </div>
+                    <button type="submit" value="Next" name="Next" class="ui right floated button">NEXT <i class="arrow right icon"></i></button>
+                </form>
+            </div>
+        </div>
 	</div>
 <script type="text/javascript">
 

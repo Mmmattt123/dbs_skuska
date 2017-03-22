@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^', include('webapp.urls')),
     url(r'^insert', include('webapp.urls')),
     url(r'^delete_user', include('webapp.urls')),
+    url(r'^next_company', include('webapp.urls')),
+    url(r'^previous_company', include('webapp.urls')),
 ]
