@@ -11,9 +11,27 @@
     <title>About: {{company.company_name}}</title>
 </head>
 <body>
-    <div class=""
+    <div class="ui container">
+        <div class="ui blue segment">
+            <div class="ui compact segment"><h2 class="ui center aligned icon header"><i class="industry icon"></i>{{company.company_name}}</h2></div>
+        </div>
 
+        <div class="ui blue segment">
+            <div class="ui four cards">
+                {% for m in managers %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header"> {{m.manager_name}}</div>
+                            <div class="description"> {{m.manager_surname}}</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui basic  red button">DELETE</div>
+                        </div>
 
-
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </body>
 </html>

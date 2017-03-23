@@ -52,9 +52,12 @@
                             <div class="description"> {{c.company_country}}</div>
                         </div>
                         <div class="extra content">
-                          <div class="ui two buttons">
-                            <div class="ui basic  blue button">MANAGER</div>
-                            <div class="ui basic  red button">DELETE</div>
+                          <div class="ui vertical fluid buttons">
+                                <form method="get" action="company_schedule">
+                                    <button class="ui button" type="submit" value="{{c.id}}" name="company_id">ABOUT</button>
+                                </form>
+
+                                <button class="ui basic red button">DELETE</button>
                           </div>
                         </div>
 

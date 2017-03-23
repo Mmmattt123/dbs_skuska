@@ -7,4 +7,5 @@ urlpatterns = [
 	url(r'^delete_user', views.delete),
 	url(r'^next_company', views.next_company),
     url(r'^previous_company', views.previous_company),
+	url(r'^company_schedule', views.company_schedule),
 ]

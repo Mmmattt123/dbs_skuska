@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from . import selects, inserts, models, inputforms
+import logging
+
 
 # import sys
 
 # Create your views here.
-DEFAULT_COMPANY_PAGEING_CONST =16
+DEFAULT_COMPANY_PAGEING_CONST =17
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -84,3 +87,11 @@ def previous_company(request):
                 previous_form = inputforms.next_company(initial={'next_val': 0})
     return render(request, 'webapp/index.html', {'companies': a, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
                                                  'next_company': b, 'next_company_form': next_form,'previous_company_form': previous_form})
+
+def company_schedule(request):
+
+    if request.GET:
+        company_id = request.GET.get('company_id')
+        comp = selects.select_company_one(company_id)
+        managers = selects.select_manager_ten(company_id)
+        return render(request, 'webapp/company_schedule.html', {'company': comp[0], 'managers': managers})

@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^delete_user', include('webapp.urls')),
     url(r'^next_company', include('webapp.urls')),
     url(r'^previous_company', include('webapp.urls')),
+    url(r'^company_schedule', include('webapp.urls')),
 ]
