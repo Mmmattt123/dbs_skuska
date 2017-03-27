@@ -1,14 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from . import selects, inserts, models, inputforms
-import logging
+
 
 
 # import sys
 
 # Create your views here.
 DEFAULT_COMPANY_PAGEING_CONST =17
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -43,14 +43,12 @@ def insert(request):
 
 def delete(request):
 
-    if request.POST:
-        form = inputforms.delete_user(request.POST)
+    if request.GET:
+        company_id = request.GET.get('company_for_delete')
+        company = models.Company.objects.filter(id = company_id)
+        company.delete()
 
-        if form.is_valid():
-            user = models.user2.objects.filter( us_id = form.cleaned_data['us_id'])
-            user.delete()
-
-    return render(request, 'webapp/index.html', {'companies': selects.select_company_all(0), 'form': inputforms.user_form(), 'form2': inputforms.delete_user()})
+    return index(request)
 
 
 def next_company(request):

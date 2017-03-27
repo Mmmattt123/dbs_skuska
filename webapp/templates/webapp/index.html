@@ -56,8 +56,9 @@
                                 <form method="get" action="company_schedule">
                                     <button class="ui button" type="submit" value="{{c.id}}" name="company_id">ABOUT</button>
                                 </form>
-
-                                <button class="ui basic red button">DELETE</button>
+                                <form method="get" action="delete_company">
+                                    <button class="ui basic red button" type="submit" value="{{c.id}}" name="company_for_delete">DELETE</button>
+                                </form>
                           </div>
                         </div>
 
@@ -65,18 +66,19 @@
                 {% endfor %}
             </div>
             <div class="ui divider"></div>
-            <div class="">
+            <div class="three ui buttons">
                 <form action="previous_company" method="post">
                     {% csrf_token%}
                     <div hidden> {{previous_company_form}} </div>
                     <button type="submit" value="Previous" name="Previous" class="ui left floated button"><i class="arrow left icon"></i> PREVIOUS</button>
                 </form>
+                <button class="ui centered button"><i class="add square icon"></i> ADD NEW COMPANY </button>
                 <form action="next_company" method="post">
                     {% csrf_token%}
                     <div hidden> {{next_company_form}} </div>
                     <button type="submit" value="Next" name="Next" class="ui right floated button">NEXT <i class="arrow right icon"></i></button>
                 </form>
-            </div>
+            </button>
         </div>
 	</div>
 <script type="text/javascript">

@@ -1,0 +1,237 @@
+-- Database: task_management
+
+-- DROP DATABASE task_management;
+
+CREATE DATABASE task_management
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'sk_SK.UTF-8'
+       LC_CTYPE = 'sk_SK.UTF-8'
+       CONNECTION LIMIT = -1;
+
+
+
+-- Table: public.webapp_company
+
+-- DROP TABLE public.webapp_company;
+
+CREATE TABLE public.webapp_company
+(
+  id integer NOT NULL DEFAULT nextval('webapp_company_id_seq'::regclass),
+  company_name character varying(25) NOT NULL,
+  company_country character varying(25) NOT NULL,
+  CONSTRAINT webapp_company_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_company
+  OWNER TO webapp;
+
+
+
+-- Table: public.webapp_manager
+
+-- DROP TABLE public.webapp_manager;
+
+CREATE TABLE public.webapp_manager
+(
+  id integer NOT NULL DEFAULT nextval('webapp_manager_id_seq'::regclass),
+  manager_name character varying(15) NOT NULL,
+  manager_surname character varying(15) NOT NULL,
+  manager_company_id integer NOT NULL,
+  CONSTRAINT webapp_manager_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_manager_manager_company_id_a4058982_fk_webapp_company_id FOREIGN KEY (manager_company_id)
+      REFERENCES public.webapp_company (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_manager
+  OWNER TO webapp;
+
+-- Index: public.webapp_manager_711a29e9
+
+-- DROP INDEX public.webapp_manager_711a29e9;
+
+CREATE INDEX webapp_manager_711a29e9
+  ON public.webapp_manager
+  USING btree
+  (manager_company_id);
+
+-- Table: public.webapp_project
+
+-- DROP TABLE public.webapp_project;
+
+CREATE TABLE public.webapp_project
+(
+  id integer NOT NULL DEFAULT nextval('webapp_project_id_seq'::regclass),
+  project_name character varying(25) NOT NULL,
+  project_end_at date NOT NULL,
+  project_manager_id integer NOT NULL,
+  CONSTRAINT webapp_project_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_project_project_manager_id_a224ccb8_fk_webapp_manager_id FOREIGN KEY (project_manager_id)
+      REFERENCES public.webapp_manager (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_project
+  OWNER TO webapp;
+
+-- Index: public.webapp_project_fbac2ac8
+
+-- DROP INDEX public.webapp_project_fbac2ac8;
+
+CREATE INDEX webapp_project_fbac2ac8
+  ON public.webapp_project
+  USING btree
+  (project_manager_id);
+
+
+
+-- Table: public.webapp_milestone
+
+-- DROP TABLE public.webapp_milestone;
+
+CREATE TABLE public.webapp_milestone
+(
+  id integer NOT NULL DEFAULT nextval('webapp_milestone_id_seq'::regclass),
+  milestone_name character varying(25) NOT NULL,
+  milestone_end_at date NOT NULL,
+  milestone_project_id integer NOT NULL,
+  CONSTRAINT webapp_milestone_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_miles_milestone_project_id_2edb4a26_fk_webapp_project_id FOREIGN KEY (milestone_project_id)
+      REFERENCES public.webapp_project (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_milestone
+  OWNER TO webapp;
+
+-- Index: public.webapp_milestone_42e8ffb5
+
+-- DROP INDEX public.webapp_milestone_42e8ffb5;
+
+CREATE INDEX webapp_milestone_42e8ffb5
+  ON public.webapp_milestone
+  USING btree
+  (milestone_project_id);
+
+
+
+-- Table: public.webapp_task
+
+-- DROP TABLE public.webapp_task;
+
+CREATE TABLE public.webapp_task
+(
+  id integer NOT NULL DEFAULT nextval('webapp_task_id_seq'::regclass),
+  task_name character varying(25) NOT NULL,
+  task_end_at date NOT NULL,
+  task_project_id integer NOT NULL,
+  CONSTRAINT webapp_task_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_task_task_project_id_a37a94f0_fk_webapp_project_id FOREIGN KEY (task_project_id)
+      REFERENCES public.webapp_project (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_task
+  OWNER TO webapp;
+
+-- Index: public.webapp_task_f7f4c80e
+
+-- DROP INDEX public.webapp_task_f7f4c80e;
+
+CREATE INDEX webapp_task_f7f4c80e
+  ON public.webapp_task
+  USING btree
+  (task_project_id);
+
+
+-- Table: public.webapp_employee
+
+-- DROP TABLE public.webapp_employee;
+
+CREATE TABLE public.webapp_employee
+(
+  id integer NOT NULL DEFAULT nextval('webapp_employee_id_seq'::regclass),
+  employee_name character varying(15) NOT NULL,
+  employee_surname character varying(15) NOT NULL,
+  employee_project_id integer NOT NULL,
+  CONSTRAINT webapp_employee_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_employ_employee_project_id_ac850525_fk_webapp_project_id FOREIGN KEY (employee_project_id)
+      REFERENCES public.webapp_project (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_employee
+  OWNER TO webapp;
+
+-- Index: public.webapp_employee_cc77b1d7
+
+-- DROP INDEX public.webapp_employee_cc77b1d7;
+
+CREATE INDEX webapp_employee_cc77b1d7
+  ON public.webapp_employee
+  USING btree
+  (employee_project_id);
+
+
+
+
+-- Table: public.webapp_working_on
+
+-- DROP TABLE public.webapp_working_on;
+
+CREATE TABLE public.webapp_working_on
+(
+  id integer NOT NULL DEFAULT nextval('webapp_working_on_id_seq'::regclass),
+  working_on_employee_id integer NOT NULL,
+  working_on_task_id integer NOT NULL,
+  CONSTRAINT webapp_working_on_pkey PRIMARY KEY (id),
+  CONSTRAINT webapp_wo_working_on_employee_id_21c4f43c_fk_webapp_employee_id FOREIGN KEY (working_on_employee_id)
+      REFERENCES public.webapp_employee (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT webapp_working_on_working_on_task_id_e015757e_fk_webapp_task_id FOREIGN KEY (working_on_task_id)
+      REFERENCES public.webapp_task (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.webapp_working_on
+  OWNER TO webapp;
+
+-- Index: public.webapp_working_on_13f88c6f
+
+-- DROP INDEX public.webapp_working_on_13f88c6f;
+
+CREATE INDEX webapp_working_on_13f88c6f
+  ON public.webapp_working_on
+  USING btree
+  (working_on_task_id);
+
+-- Index: public.webapp_working_on_d663287a
+
+-- DROP INDEX public.webapp_working_on_d663287a;
+
+CREATE INDEX webapp_working_on_d663287a
+  ON public.webapp_working_on
+  USING btree
+  (working_on_employee_id);
+
+
+
+
+
+

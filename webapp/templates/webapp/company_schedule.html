@@ -12,12 +12,23 @@
 </head>
 <body>
     <div class="ui container">
-        <div class="ui blue segment">
-            <div class="ui compact segment"><h2 class="ui center aligned icon header"><i class="industry icon"></i>{{company.company_name}}</h2></div>
-        </div>
+        <div class="ui secondary segment">
+            <div class="ui center aligned segment"><h2 class="ui icon center aligned header"><i class="industry icon"></i>{{company.company_name}}</h2>
+                <h3 class="ui header">Info:</h3>
+                <p class="ui center aligned">Company name: {{company.company_name}}</p>
+                <p>Company country: {{company.company_country}}</p>
+                <p>Company system ID: {{company.id}}</p>
+            </div>
+        <!--</div>-->
 
-        <div class="ui blue segment">
+        <!--<div class="ui secondary segment">-->
+            <h2 class="ui center aligned icon header"><i class="users icon"></i>Company managers:</h2>
             <div class="ui four cards">
+                {% if not managers %}
+                    <h4 class="ui center aligned icon header"> Company has no managers yet...</h4>
+
+                {% endif %}
+
                 {% for m in managers %}
                     <div class="card">
                         <div class="content">
@@ -25,7 +36,10 @@
                             <div class="description"> {{m.manager_surname}}</div>
                         </div>
                         <div class="extra content">
-                            <div class="ui basic  red button">DELETE</div>
+                            <div class="ui two buttons">
+                                <button class="ui button">PROJECTS</button>
+                                <button class="ui basic  red button">DELETE</button>
+                            </div>
                         </div>
 
                     </div>
