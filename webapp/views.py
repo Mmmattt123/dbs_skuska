@@ -16,9 +16,10 @@ def index(request):
     a,b = selects.select_company_all(0)
     next_form = inputforms.next_company(initial={'next_val': b+DEFAULT_COMPANY_PAGEING_CONST})
     previous_form = inputforms.next_company(initial={'next_val': b})
-
+    print(a[0].company_name)
     return render(request, 'webapp/index.html', {'companies': a, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
-                                                 'next_company_id': b, 'next_company_form': next_form, 'previous_company_form': previous_form})
+                                                 'next_company_id': b, 'next_company_form': next_form, 'previous_company_form': previous_form,
+                                                 'find_company': inputforms.find_company() })
 
 
 def insert(request):
@@ -93,3 +94,17 @@ def company_schedule(request):
         comp = selects.select_company_one(company_id)
         managers = selects.select_manager_ten(company_id)
         return render(request, 'webapp/company_schedule.html', {'company': comp[0], 'managers': managers})
+
+
+def company_find(request):
+
+    if request.GET:
+        company_str = request.GET.get('company_str')
+        print(company_str)
+        comp = selects.select_company_find(company_str)
+        b = 16
+        next_form = inputforms.next_company(initial={'next_val': b+DEFAULT_COMPANY_PAGEING_CONST})
+        previous_form = inputforms.next_company(initial={'next_val': b})
+        return render(request, 'webapp/index.html', {'companies': comp, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
+                                                 'next_company': b, 'next_company_form': next_form, 'previous_company_form': previous_form})
+

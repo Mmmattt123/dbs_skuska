@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^next_company', include('webapp.urls')),
     url(r'^previous_company', include('webapp.urls')),
     url(r'^company_schedule', include('webapp.urls')),
+    url(r'^company_find', include('webapp.urls')),
 ]

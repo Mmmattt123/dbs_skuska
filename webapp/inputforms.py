@@ -20,6 +20,12 @@ class delete_user(forms.Form):
 
 class next_company(forms.Form):
 
-
-
     next_val = forms.IntegerField()
+
+
+class find_company(forms.Form):
+    
+    company_str = forms.CharField();
+
+
+
