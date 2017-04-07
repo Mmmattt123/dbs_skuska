@@ -17,6 +17,8 @@
                 <h3 class="ui header">Info:</h3>
                 <p class="ui center aligned">Company name: {{company.company_name}}</p>
                 <p>Company country: {{company.company_country}}</p>
+                <p>Number of managers: {{num_of_managers}}</p>
+                <p>Number of departments: {{num_of_departments}}</p>
                 <p>Company system ID: {{company.id}}</p>
             </div>
         <!--</div>-->
@@ -26,14 +28,12 @@
             <div class="ui four cards">
                 {% if not managers %}
                     <h4 class="ui center aligned icon header"> Company has no managers yet...</h4>
-
                 {% endif %}
-
                 {% for m in managers %}
                     <div class="card">
                         <div class="content">
-                            <div class="header"> {{m.manager_name}}</div>
-                            <div class="description"> {{m.manager_surname}}</div>
+                            <div class="header"> {{ m.manager_name }} {{ m.manager_surname }} </div>
+                            <div class="description"> </div>
                         </div>
                         <div class="extra content">
                             <div class="ui two buttons">
@@ -45,6 +45,45 @@
                     </div>
                 {% endfor %}
             </div>
+            <h2 class="ui center aligned icon header"><i class="world icon"></i>Co-working projects:</h2>
+             <div class="ui four cards">
+                {% if not project %}
+                    <h4 class="ui center aligned icon header"> Company has no co-workin projects yet...</h4>
+                {% endif %}
+                {% for p in project %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header"> {{p.project_name}}</div>
+                            <div class="description">End date:{{p.project_end_at}}</div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui two buttons">
+                                <button class="ui button">ABOUT</button>
+                                <button class="ui basic  red button">DELETE</button>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+            <!--<div class="ui horizontal divider"></div>-->
+            <h2 class="ui center aligned icon header"><i class="suitcase icon"></i>Company departments:</h2>
+            <div class="ui divided items">
+                {% for d in departments %}
+              <div class="item">
+                <div class="content">
+                  <a class="header">{{d.department_name}}</a>
+                  <div class="meta">
+                      <span>{{d.department_city}}</span>
+                      <span>{{d.department_address}}</span>
+                      <span>{{d.department_zipcode}}</span>
+                      <button class="ui right floated primary button">ABOUT</button>
+                  </div>
+                </div>
+              </div>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
 </body>

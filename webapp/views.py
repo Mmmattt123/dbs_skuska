@@ -93,7 +93,11 @@ def company_schedule(request):
         company_id = request.GET.get('company_id')
         comp = selects.select_company_one(company_id)
         managers = selects.select_manager_ten(company_id)
-        return render(request, 'webapp/company_schedule.html', {'company': comp[0], 'managers': managers})
+        projects = selects.select_co_working_projects(company_id)
+        departments = selects.select_departments(company_id)
+        print(managers[0].manager_name)
+        return render(request, 'webapp/company_schedule.html', {'company': comp[0], 'managers': managers, 'project': projects,
+                                                                'departments': departments, 'num_of_managers': len(managers),'num_of_departments': len(departments)})
 
 
 def company_find(request):
