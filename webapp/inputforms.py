@@ -25,7 +25,7 @@ class next_company(forms.Form):
 
 class find_company(forms.Form):
     
-    company_str = forms.CharField();
+    company_str = forms.CharField()
 
 
 

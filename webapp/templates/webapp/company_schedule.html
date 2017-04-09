@@ -48,7 +48,7 @@
             <h2 class="ui center aligned icon header"><i class="world icon"></i>Co-working projects:</h2>
              <div class="ui four cards">
                 {% if not project %}
-                    <h4 class="ui center aligned icon header"> Company has no co-workin projects yet...</h4>
+                    <h4 class="ui center aligned icon header"> Company has no co-working projects yet...</h4>
                 {% endif %}
                 {% for p in project %}
                     <div class="card">
@@ -69,6 +69,9 @@
             <!--<div class="ui horizontal divider"></div>-->
             <h2 class="ui center aligned icon header"><i class="suitcase icon"></i>Company departments:</h2>
             <div class="ui divided items">
+                {% if not department %}
+                    <h4 class="ui center aligned icon header"> Company has no department yet...</h4>
+                {% endif %}
                 {% for d in departments %}
               <div class="item">
                 <div class="content">

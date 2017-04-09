@@ -95,20 +95,24 @@ def company_schedule(request):
         managers = selects.select_manager_ten(company_id)
         projects = selects.select_co_working_projects(company_id)
         departments = selects.select_departments(company_id)
-        print(managers[0].manager_name)
+        # print(managers[0].manager_name)
         return render(request, 'webapp/company_schedule.html', {'company': comp[0], 'managers': managers, 'project': projects,
                                                                 'departments': departments, 'num_of_managers': len(managers),'num_of_departments': len(departments)})
 
 
 def company_find(request):
 
-    if request.GET:
-        company_str = request.GET.get('company_str')
-        print(company_str)
-        comp = selects.select_company_find(company_str)
-        b = 16
-        next_form = inputforms.next_company(initial={'next_val': b+DEFAULT_COMPANY_PAGEING_CONST})
-        previous_form = inputforms.next_company(initial={'next_val': b})
-        return render(request, 'webapp/index.html', {'companies': comp, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
+    if request.POST:
+        form = inputforms.find_company(request.POST)
+        print(form + 'daco')
+        if form.is_valid():
+            company_str = form.changed_data(['company_str'])
+            print(company_str)
+            comp = selects.select_company_find(company_str)
+            b = 16
+            next_form = inputforms.next_company(initial={'next_val': b+DEFAULT_COMPANY_PAGEING_CONST})
+            previous_form = inputforms.next_company(initial={'next_val': b})
+            return render(request, 'webapp/index.html', {'companies': comp, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
                                                  'next_company': b, 'next_company_form': next_form, 'previous_company_form': previous_form})
-
+    print('fail')
+    return index(request)

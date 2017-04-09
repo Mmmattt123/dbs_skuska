@@ -21,14 +21,14 @@ def select_user_id():
 
 def select_manager_ten(company_id):
 
-    managers = [models.Manager(m.id, m.manager_registred_at, m.manager_name, m.manager_surname) for m in models.Manager.objects.raw('SELECT id, manager_name, manager_surname, manager_registred_at FROM public.webapp_manager WHERE manager_company_id = %s LIMIT 10 ', [company_id])]
+    managers = [models.Manager(m.id, m.manager_registred_at, m.manager_name, m.manager_surname) for m in models.Manager.objects.raw('SELECT id, manager_name, manager_surname, manager_registred_at FROM public.webapp_manager WHERE manager_company_id = %s', [company_id])]
     return managers
 
 
 def select_company_find(company_str):
 
     # noinspection SqlNoDataSourceInspection
-    list_c = [models.Company(c.id, c.company_name, c.company_country, c.company_created_at) for c in models.Company.objects.raw('''SELECT id, company_name, company_country FROM public.webapp_company WHERE company_name ~ %s LIMIT 16''', [company_str])]
+    list_c = [models.Company(c.id, c.company_name, c.company_country) for c in models.Company.objects.raw('SELECT id, company_name, company_country FROM EXEC(SELECT id, company_name, company_country FROM public.webapp_company WHERE company_name LIKE s'%') LIMIT 16', [company_str])]
     print(list_c)
     return list_c
 
