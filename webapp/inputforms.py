@@ -3,14 +3,11 @@ from . import models
 from django import forms
 
 
-class user_form(ModelForm):
-
-
+class company_form(ModelForm):
 
     class Meta():
-        model = models.user2
-        fields = ['us_name', 'us_surname', 'us_role']#, 'us_id']
-
+        model = models.Company
+        fields = ['company_name', 'company_country']
 
 
 class delete_user(forms.Form):

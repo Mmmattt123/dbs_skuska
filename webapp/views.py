@@ -17,9 +17,9 @@ def index(request):
     next_form = inputforms.next_company(initial={'next_val': b+DEFAULT_COMPANY_PAGEING_CONST})
     previous_form = inputforms.next_company(initial={'next_val': b})
     print(a[0].company_name)
-    return render(request, 'webapp/index.html', {'companies': a, 'form': inputforms.user_form(), 'form2': inputforms.delete_user(),
+    return render(request, 'webapp/index.html', {'companies': a, 'form2': inputforms.delete_user(),
                                                  'next_company_id': b, 'next_company_form': next_form, 'previous_company_form': previous_form,
-                                                 'find_company': inputforms.find_company() })
+                                                 'find_company': inputforms.find_company(), 'add_company': inputforms.company_form() })
 
 
 def insert(request):
@@ -43,9 +43,11 @@ def insert(request):
 
 
 def delete(request):
-
+    print("snazim deletovat")
     if request.GET:
+        print("deletujem")
         company_id = request.GET.get('company_for_delete')
+        print(company_id)
         company = models.Company.objects.filter(id = company_id)
         company.delete()
 
