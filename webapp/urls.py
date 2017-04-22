@@ -9,4 +9,8 @@ urlpatterns = [
 	url(r'^previous_company', views.previous_company),
 	url(r'^company_schedule', views.company_schedule),
 	url(r'^company_find', views.company_find),
+	url(r'add_company', views.add_company),
+	url(r'add_manager', views.add_manager),
+	url(r'find_cowork_project', views.find_cowork_project),
+	url(r'add_cowork', views.add_cowork),
 ]

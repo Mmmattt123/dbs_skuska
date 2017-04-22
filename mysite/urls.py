@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^previous_company', include('webapp.urls')),
     url(r'^company_schedule', include('webapp.urls')),
     url(r'^company_find', include('webapp.urls')),
+    url(r'add_company', include('webapp.urls')),
+    url(r'add_manager', include('webapp.urls')),
+    url(r'find_cowork_project', include('webapp.urls')),
+    url(r'add_cowork', include('webapp.urls')),
 ]

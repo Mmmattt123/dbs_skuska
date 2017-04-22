@@ -38,12 +38,15 @@
                         <div class="extra content">
                             <div class="ui two buttons">
                                 <button class="ui button">PROJECTS</button>
-                                <button class="ui basic  red button">DELETE</button>
+                                <button class="ui basic red button">DELETE</button>
                             </div>
                         </div>
 
                     </div>
                 {% endfor %}
+            </div>
+            <div class="ui center aligned header">
+                <butoon class="ui button" id="add_new_manager" type="button"><i class="ui plus icon"></i>ADD MANAGER</butoon>
             </div>
             <h2 class="ui center aligned icon header"><i class="world icon"></i>Co-working projects:</h2>
              <div class="ui four cards">
@@ -66,10 +69,13 @@
                     </div>
                 {% endfor %}
             </div>
+             <div class="ui center aligned header">
+                <button class="ui button" id="add_new_co-working_project" type="button"><i class="ui plus icon"></i>ADD CO-WORKING PROJECT</button>
+             </div>
             <!--<div class="ui horizontal divider"></div>-->
             <h2 class="ui center aligned icon header"><i class="suitcase icon"></i>Company departments:</h2>
             <div class="ui divided items">
-                {% if not department %}
+                {% if not departments %}
                     <h4 class="ui center aligned icon header"> Company has no department yet...</h4>
                 {% endif %}
                 {% for d in departments %}
@@ -86,8 +92,177 @@
               </div>
                 {% endfor %}
             </div>
-
+            <div class="ui center aligned header">
+              <button class="ui button" id="add_new_department" type="button"><i class="ui plus icon"></i>ADD DEPARTMENT</button>
+            </div>
         </div>
     </div>
+    <div class="ui modal" id="manager_modal">
+        <div class="content">
+            <h1 class="ui center aligned header">Add new manager:</h1>
+
+            <form class="ui form" method="post" action="add_manager" style="overflow: hidden">
+                {% csrf_token %}
+                <label>Manager name:</label>
+                {{manager_form.manager_name}}
+                <label>Manager surname:</label>
+                {{manager_form.manager_surname}}
+                <input type="number" id=id_manager_company name="manager_company_id" value="{{company.id}}">
+                <div class="ui hidden divider"></div>
+                <button class="ui right floated button" id="cancel_manager" type="button">CANCEL</button>
+                <button class="ui right floated positive button"id="add_manager" type="submit"><i class="ui plus icon"></i>ADD</button>
+            </form>
+        </div>
+    </div>
+    <div class="ui modal" id="co-working_modal">
+        <div class="content">
+            <h1 class="ui center aligned header">Add new co-work:</h1>
+            <div id="find_load"></div>
+            <div class="ui hidden divider"></div>
+                <div class="ui form">
+                    <div class="two fields">
+                        <div class="field">
+                            <input type="text" id="find_project">
+                        </div>
+                        <div class="field">
+                            <button class="ui button" id="add_co-working" type="submit"><i class="ui plus icon"></i>FIND</button>
+                        </div>
+                    </div>
+                </div>
+                <input class="ui center aligned input" id="c_id" style="visibility: hidden" value="{{company.id}}">
+                    <div class=" ui divided items" id="project_list">
+                        <div class="item"></div>
+                    </div>
+            <button class="ui hidden button" id="add_100_co-working" name="add100" type="submit"><i class="ui plus icon"></i>NEXT 100</button>
+            <button class="ui right floated button" id="cancel_co-working" type="button">CANCEL</button>
+            <div class="ui inverted blur dimmer" id="find_dimmer">
+                <div class="ui medium text loader">Loading</div>
+            </div>
+         </div>
+    </div>
+    <div class="ui modal" id="department_modal">
+        <div class="content">
+            <h1 class="ui center aligned header">Add new department:</h1>
+            <div class="ui hidden divider"></div>
+            <form class="ui form" method="post" action="add_department">
+
+            <button class="ui right floated button" id="cancel_department" type="button">CANCEL</button>
+            <button class="ui right floated positive button"id="add_department" type="submit"><i class="ui plus icon"></i>ADD</button>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    var num = 0;
+    $('#add_new_manager').click( function () {
+        var id = "{{company.id}}";
+        $('#manager_modal').modal("show");
+        $('#id_manager_company').hide();
+        $('#id_manager_company').prop('value', id);
+    })
+
+    $('#add_new_co-working_project').click( function () {
+        $('#co-working_modal').modal("show");
+        $('#add_100_co-working').hide();
+    })
+
+    $('#add_new_department').click( function () { $('#department_modal').modal("show"); })
+
+    $('#cancel_manager').click( function () { $('#manager_modal').modal("hide"); })
+
+    $('#cancel_co-working').click( function () {
+        $('#co-working_modal').modal("hide");
+        $('#project_list').html("");
+    })
+
+    $('#cancel_department').click( function () { $('#department_modal').modal("hide"); })
+
+    $('#add_manager').click( function () { $('#manager_modal').modal("hide"); })
+
+    $('#add_co-working').click( function () {
+
+
+        $.ajax({
+        type: 'GET',
+        data: {
+            "id": $('#find_project').val(),
+            "num_i": num
+        },
+        url: 'find_cowork_project',
+        success: function (data) {
+//            $('#find_dimmer').dimmer("show");
+
+            $('#project_list').html("");
+
+            $.each(data, function (key, value) {
+                $('#project_list').append('<div class="item">'
+                        +'<div class="content">'
+                        +'<div class="header">'+value.project_name+'</div>'
+                        +'<div class="description">'+"Owner: "+value.company_name
+                        +'<form method="get" action="add_cowork">' +"{% csrf_token %}"
+                        +'<input type="number" style="visibility: hidden" value="'+value.id+'" name="project">'
+                        +'<input type="number" style="visibility: hidden" value="'+$('#c_id').val()+'" name="company">'
+                        +'<button class="ui right floated button" type="submit" >'+"ADD"
+                        +'</button>'
+                        + '</form>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>')
+
+            })
+            $('#add_100_co-working').show();
+            $('#project_list').resize();
+//             $('#find_dimmer').dimmer("hide");
+//             $('#co-working_modal').modal("hide");
+//             $('#co-working_modal').modal("show");
+             num = 100;
+        }
+    });
+
+    })
+
+    $('#add_100_co-working').click( function () {
+
+
+        $.ajax({
+        type: 'GET',
+        data: {
+            "id": $('#find_project').val(),
+            "num_i": num
+        },
+        url: 'find_cowork_project',
+        success: function (data) {
+//            $('#find_dimmer').dimmer("show");
+
+            $.each(data, function (key, value) {
+                $('#project_list').append('<div class="item">'
+                        +'<div class="content">'
+                        +'<div class="header">'+value.project_name+'</div>'
+                        +'<div class="description">'+"Owner: "+value.company_name
+                        +'<form method="post" action="add_cowork">'
+                        +'<input type="number" style="visibility: hidden" value="'+value.id+'" name="project_id">'
+                        +'<input type="number" style="visibility: hidden" value="'+$('#c_id').val()+'">'
+                        +'<button class="ui right floated button" type="submit" >'+"ADD"
+                        +'</button>'
+                        + '</form>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>')
+
+            })
+            $('#project_list').resize();
+
+//           $('#find_dimmer').dimmer("hide");
+//             $('#co-working_modal').modal("hide");
+//             $('#co-working_modal').modal("show");
+             num =num + 100;
+        }
+    });
+
+    })
+
+    $('#add_department').click( function () { $('#department_modal').modal("hide"); })
+
+
+</script>
 </body>
 </html>
