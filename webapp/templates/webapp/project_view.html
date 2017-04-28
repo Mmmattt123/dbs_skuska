@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project: {{ project.name }}</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.0/semantic.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.css">
+
+</head>
+<body>
+    <div class="ui container">
+        <div class="ui segment">
+            <h1 class="ui center aligned header">Name: {{project.project_name}}</h1>
+            <!--<h2 class="ui center aligned header">Owner: {{owner}}</h2>-->
+            <h2 class="ui center aligned header">Project manager: {{manager}}</h2>
+            <!--<div class="ui center aligned header">Number of cooperators:{{cooperators.num}}</div>-->
+        </div>
+        <div class="ui segment">
+	        <div class="ui divided grid">
+                <div class="five wide column">
+                    <div class="ui one cards">
+                        {% for p in todo %}
+                            <div class="ui red card">
+                                <div class="content">
+                                    <div class="header">{{p.task_name}}</div>
+                                    <div class="description">
+                                        <p>Deadline: {{p.task_end_at}}</p>
+                                        <h3 class="ui header">Note:</h3>
+                                        <p>{{p.task_note}}</p>
+                                    </div>
+                                </div>
+                                <div class="ui red inverted extra content">
+                                    <form method="get" action="update_task">
+                                        <input type="number" name="project" value="{{project.id}}" style="display: none" >
+                                        <button class="ui right floated button" name="update" value="{{p.id}}">Start task</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="six wide column">
+                    <div class="ui one cards">
+                        {% for p in in_progress %}
+                            <div class="ui yellow card">
+                                <div class="content">
+                                    <div class="header">{{p.task_name}}</div>
+                                    <div class="description">
+                                        <p>Deadline: {{p.task_end_at}}</p>
+                                        <h3 class="ui header">Note:</h3>
+                                        <p>{{p.task_note}}</p>
+                                    </div>
+                                </div>
+                                 <div class="extra content">
+                                    <form method="get" action="update_task">
+                                        <input type="number" name="project" value="{{project.id}}" style="display: none" >
+                                        <button class="ui right floated button" name="update" value="{{p.id}}">Finish task</button>
+                                    </form>
+                                 </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="five wide column">
+                    <div class="ui one cards">
+                        {% for p in finished %}
+                            <div class="ui green card">
+                                <div class="content">
+                                    <div class="header">{{p.task_name}}</div>
+                                    <div class="description">
+                                        <p>Deadline: {{p.task_end_at}}</p>
+                                        <h3 class="ui header">Note:</h3>
+                                        <p>{{p.task_note}}</p>
+                                    </div>
+                                </div>
+                                 <div class="extra content">
+                                    <form method="get" action="update_task">
+                                        <input type="number" name="project" value="{{project.id}}" style="display: none" >
+                                        <button class="ui right floated button" name="update" value="{{p.id}}">Remove task</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <!--<form class="ui form" action="add_task" method="post">-->
+                <!--{% csrf_token %}-->
+                <!--<label>Task name</label>-->
+                <!--{{add_task.task_name}}-->
+                <!--&lt;!&ndash;<label>Task end date:</label>&ndash;&gt;-->
+                <!--&lt;!&ndash;{{add_task.task_end_at}}&ndash;&gt;-->
+                <!--<label>Note:</label>-->
+                <!--{{add_task.task_note}}-->
+                <!--<input name="task_project" value="{{project.id}}" style="display: none">-->
+                <!--<input name="task_status" value="0" style="display: none">-->
+                <!--<div class="ui hidden divider"></div>-->
+                <!--<button class="ui button" id="add_task" type="submit">Add</button>-->
+            <!--</form>-->
+        </div>
+            <div class="ui segment">
+	            <h3 class="ui center aligned header">Tu bude mozno graf</h3> <div id="daco"></div>
+            </div>
+        </div>
+    </div>
+<script>
+    var done = {{done}};
+    var remaining = {{remaining}};
+
+    Highcharts.chart('daco', {
+            colors: ['#299b39','#f44141'],
+            credits: {
+                enabled: false
+            },
+            chart: {
+                borderRadius: 5,
+                renderTo: 'container',
+                type: 'pie',
+            },
+            title: {
+                text: 'Progress'
+            },
+
+            series: [{
+                data: [["Done",done],["To do",remaining]],
+                size: '60%',
+                innerSize: '60%',
+                showInLegend:true,
+            }],
+            tooltip: {
+                headerFormat: "",
+                pointFormat: '<span style="color:{point.color}">\u25CF</span> {point.name}: {point.y}%',
+                hideDelay: 20
+            },
+            xAxis: {
+                visible: false
+            },
+            yAxis: {
+                title: {
+                    text:null
+                }
+            }
+        });
+
+//    $('#add_task').click(function () {
+//        $('#id_task_project').prop('value',"+{{ project.id }}+");
+//        $('#id_task_status').prop('value',"0")
+//    });
+
+</script>
+</body>
+</html>

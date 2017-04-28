@@ -34,13 +34,24 @@ class add_manager(ModelForm):
         fields = ['manager_name', 'manager_surname']
 
 class add_department(ModelForm):
-
+    department_company = forms.IntegerField()
     class Meta:
         model = models.Department
-        fields = ['department_name','department_city', 'department_address', 'department_zipcode']
+        fields = ['department_name', 'department_city',
+                  'department_address', 'department_zipcode']
 
 class add_cowork(ModelForm):
 
     class Meta:
         model = models.working_on
-        fields = ['w_company','w_project']
+        fields = ['w_company', 'w_project']
+
+
+class add_task(ModelForm):
+
+    task_project = forms.IntegerField()
+    task_status = forms.IntegerField()
+    class Meta:
+        model = models.Task
+        fields = ['task_name', 'task_note']
+

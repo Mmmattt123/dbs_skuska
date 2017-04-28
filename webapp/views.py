@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from . import selects, inserts, models, inputforms
 import datetime
-import json
+from django.db import connection
 
 # import sys
 
@@ -114,7 +114,8 @@ def company_schedule(request, **id):
     return render(request, 'webapp/company_schedule.html',
                   {'company': comp[0], 'managers': managers, 'project': projects,
                    'departments': departments, 'num_of_managers': len(managers),
-                   'num_of_departments': len(departments), 'manager_form': inputforms.add_manager})
+                   'num_of_departments': len(departments), 'manager_form': inputforms.add_manager,
+                   'add_department': inputforms.add_department})
 
 
 def company_find(request):
@@ -170,13 +171,92 @@ def find_cowork_project(request):
 
     return JsonResponse(selects.select_project_find(name, num), safe=False)
 
+
 def add_cowork(request):
     c_id = request.GET.get('company')
     p_id = request.GET.get('project')
-    print(c_id,p_id)
-    cowork = models.working_on.objects.create(w_company=models.Company.objects.filter(id=c_id)[0], w_project= models.Project.objects.filter(id=p_id)[0])
+    print(c_id, p_id)
+    cowork = models.working_on.objects.create(w_company=models.Company.objects.filter(id=c_id)[0],
+                                              w_project=models.Project.objects.filter(id=p_id)[0])
 
     # cowork.w_project = p_id
     # cowork.w_company = c_id
     # cowork.save()
     return company_schedule(request, id=c_id)
+
+
+def add_department(request):
+    if request.POST:
+        form = inputforms.add_department(request.POST)
+        if form.is_valid():
+            department = form.save(commit=False)
+            id_company = form.cleaned_data['department_company']
+            department.department_company = models.Company.objects.filter(id=id_company)[0]
+            department.save()
+            print(department)
+    return company_schedule(request, id=id_company)
+
+
+def delete_cowork(request):
+    if request.GET:
+        p_id = request.GET.get('id_for_delete')
+        print(p_id)
+        co_work = models.working_on.objects.filter(id=p_id)
+        co_work.delete()
+        return index(request)
+
+
+def delete_manager(request):
+    if request.GET:
+        p_id = request.GET.get('id_for_delete')
+        print(p_id)
+        manager = models.Manager.objects.filter(id=p_id)
+        # c_id = manager.w_company.id
+        manager.delete()
+        return index(request)
+
+
+def project_schedule(request, **id):
+    if (id):
+        p_id=id['id']
+    else:
+        p_id = request.GET.get('project_id')
+    project = models.Project.objects.filter(id=p_id)
+    print(selects.todo_task(p_id), selects.in_progress_task(p_id), selects.finished_task(p_id))
+    return render(request, 'webapp/project_view.html',
+                      {'add_task': inputforms.add_task,
+                       'todo': selects.todo_task(p_id),
+                       'in_progress': selects.in_progress_task(p_id),
+                       'finished': selects.finished_task(p_id),
+                       'project': project[0],
+                       'done': len(selects.finished_task(p_id))/(len(selects.todo_task(p_id))+len(selects.in_progress_task(p_id))+len(selects.finished_task(p_id)))*100,
+                       'remaining': (1-(len(selects.finished_task(p_id))/(len(selects.todo_task(p_id))+len(selects.in_progress_task(p_id))+len(selects.finished_task(p_id)))))*100,
+                       #'manager': project.project_manager.manager_name+project.project_manager.manager_surname,
+                      # 'Owner':
+                      })
+
+
+def update_task(request):
+    if request.GET:
+        task_id = request.GET.get('update')
+        p_id = request.GET.get('project')
+        with connection.cursor() as cursor:
+            query = "UPDATE webapp_task SET task_status_id = (task_status_id+1)%3 WHERE id ="+task_id+";"
+            cursor.execute(query)
+
+    return project_schedule(request, id=p_id)
+
+
+def department_schedule(request):
+    if request.GET:
+        d_id = request.GET.get('department')
+        department = models.Department.objects.filter(id=d_id)
+        # print(department)
+        # c_id = department.department_company
+        # departments = selects.select_departments(c_id)
+
+        return render(request, 'webapp/department_schedule.html',
+                      {'department': department,
+                       # 'departments': departments,
+                       'employees': selects.select_employee(d_id)
+                       })

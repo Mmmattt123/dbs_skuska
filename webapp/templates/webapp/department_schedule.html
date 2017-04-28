@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Department: {{ department.department_name }}</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.0/semantic.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.css">
+
+</head>
+<body>
+<div class="ui container">
+	<div class="iu divided items">
+        {% for d in departments %}
+        <div class="ui item">
+            <div class="content">
+                <h2 class="header">{{d.department_name}}</h2>
+            </div>
+            <div class="meta">
+                <span>{{d.department_city}}</span>
+                <span>{{d.department_address}}</span>
+                <span>{{d.department_zipcode}}</span>
+                <form method="get" action="merge_departments">
+                <button class="ui right floated primary button">MERGE</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="ui four cards">
+                {% if not employees %}
+                    <h4 class="ui center aligned icon header"> Department has no Employee yet...</h4>
+                {% endif %}
+                {% for e in employees %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header"> {{e.employee_name}} {{employee_surname}}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+</body>
+</html>

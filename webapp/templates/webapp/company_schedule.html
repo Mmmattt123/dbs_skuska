@@ -22,7 +22,6 @@
                 <p>Company system ID: {{company.id}}</p>
             </div>
         <!--</div>-->
-
         <!--<div class="ui secondary segment">-->
             <h2 class="ui center aligned icon header"><i class="users icon"></i>Company managers:</h2>
             <div class="ui four cards">
@@ -38,7 +37,7 @@
                         <div class="extra content">
                             <div class="ui two buttons">
                                 <button class="ui button">PROJECTS</button>
-                                <button class="ui basic red button">DELETE</button>
+                                <button class="ui basic red button manager" value="{{m.id}}">DELETE</button>
                             </div>
                         </div>
 
@@ -60,10 +59,12 @@
                             <div class="description">End date:{{p.project_end_at}}</div>
                         </div>
                         <div class="extra content">
-                            <div class="ui two buttons">
-                                <button class="ui button">ABOUT</button>
-                                <button class="ui basic  red button">DELETE</button>
-                            </div>
+                            <form method="get" action="project_shedule">>
+                                <div class="ui two buttons">
+                                    <button class="ui button" type="submit" value="{{p.id}}" name="project_id">ABOUT</button>
+                                    <button class="ui basic red button project" value="{{p.id}}" type="button">DELETE</button>
+                                </div>
+                            </form>
                         </div>
 
                     </div>
@@ -86,7 +87,9 @@
                       <span>{{d.department_city}}</span>
                       <span>{{d.department_address}}</span>
                       <span>{{d.department_zipcode}}</span>
-                      <button class="ui right floated primary button">ABOUT</button>
+                      <form method="get" action="department_schedule">
+                        <button class="ui right floated primary button" name="department" value="{{d.id}}">ABOUT</button>
+                      </form>
                   </div>
                 </div>
               </div>
@@ -131,7 +134,6 @@
                 </div>
                 <input class="ui center aligned input" id="c_id" style="visibility: hidden" value="{{company.id}}">
                     <div class=" ui divided items" id="project_list">
-                        <div class="item"></div>
                     </div>
             <button class="ui hidden button" id="add_100_co-working" name="add100" type="submit"><i class="ui plus icon"></i>NEXT 100</button>
             <button class="ui right floated button" id="cancel_co-working" type="button">CANCEL</button>
@@ -145,9 +147,41 @@
             <h1 class="ui center aligned header">Add new department:</h1>
             <div class="ui hidden divider"></div>
             <form class="ui form" method="post" action="add_department">
-
-            <button class="ui right floated button" id="cancel_department" type="button">CANCEL</button>
-            <button class="ui right floated positive button"id="add_department" type="submit"><i class="ui plus icon"></i>ADD</button>
+                {% csrf_token %}
+                <label>Name:</label>
+                {{add_department.department_name}}
+                <label>City:</label>
+                {{add_department.department_city}}
+                <label>Address:</label>
+                {{add_department.department_address}}
+                <label>Zipcode:</label>
+                {{add_department.department_zipcode}}
+                {{add_department.department_company}}
+                <button class="ui right floated button" id="cancel_department" type="button">CANCEL</button>
+                <button class="ui right floated positive button"id="add_department" type="submit"><i class="ui plus icon"></i>ADD</button>
+            </form>
+        </div>
+    </div>
+    <div class="ui page dimmer">
+        <div class="content">
+            <div class="center" id="dimmer_manager">
+                <h2 class="ui inverted icon header"><i class="ui warning icon"></i>Do you want to delete manager?</h2>
+                <div class="ui two buttons">
+                    <form method="get" action="delete_manager">
+                        <button class="ui negative button" name="id_for delete" id="id_for_delete_manager" type="submit">Delete</button>
+                        <button class="ui inverted button" id="cancel_manager_delete">Cancel</button>
+                    </form>
+                    </div>
+                </div>
+            <div class="center" id="dimmer_project">
+                <h2 class="ui inverted icon header"><i class="ui warning icon"></i>Do you want to delete project?</h2>
+                <div class="ui two buttons">
+                    <form method="get" action="delete_cowork">
+                        <button class="ui negative button" type="submit" name="id_for_delete" id="id_for_delete_project">Delete</button>
+                        <button class="ui inverted button" type="button" id="cancel_cowork_delete">Cancel</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -165,7 +199,11 @@
         $('#add_100_co-working').hide();
     })
 
-    $('#add_new_department').click( function () { $('#department_modal').modal("show"); })
+    $('#add_new_department').click( function () {
+        $('#department_modal').modal("show");
+        $('#id_department_company').hide();
+        $('#id_department_company').prop('value',"{{company.id}}")
+    })
 
     $('#cancel_manager').click( function () { $('#manager_modal').modal("hide"); })
 
@@ -178,8 +216,9 @@
 
     $('#add_manager').click( function () { $('#manager_modal').modal("hide"); })
 
-    $('#add_co-working').click( function () {
 
+
+    $('#add_co-working').click( function () {
 
         $.ajax({
         type: 'GET',
@@ -260,8 +299,25 @@
 
     })
 
+    $('#cancel_co-work_delete').click(function () {
+        $('#dimmer_project').dimmer("hide");
+    })
+
     $('#add_department').click( function () { $('#department_modal').modal("hide"); })
 
+    $('.ui.basic.red.button.manager').click( function () {
+        $('.ui.page.dimmer').dimmer("show");
+        $('#dimmer_manager').show();
+        $('#dimmer_project').hide();
+        $('#id_for_delete_manager').prop('value',$(this).val());
+    })
+
+    $('.ui.basic.red.button.project').click( function () {
+        $('.ui.page.dimmer').dimmer("show");
+        $('#dimmer_manager').hide();
+        $('#dimmer_project').show();
+        $('#id_for_delete_project').prop('value',$(this).val());
+    })
 
 </script>
 </body>

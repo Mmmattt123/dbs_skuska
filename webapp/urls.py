@@ -13,4 +13,10 @@ urlpatterns = [
 	url(r'add_manager', views.add_manager),
 	url(r'find_cowork_project', views.find_cowork_project),
 	url(r'add_cowork', views.add_cowork),
+	url(r'add_department', views.add_department),
+	url(r'delete_cowork',views.delete_cowork),
+	url(r'delete_manager', views.delete_manager),
+	url(r'project_shedule',views.project_schedule),
+	url(r'update_task',views.update_task),
+	url(r'department_schedule',views.department_schedule),
 ]
