@@ -99,3 +99,18 @@ def select_employee(d_id):
     query = "SELECT id, employee_name, employee_surname FROM webapp_employee where employee_department_id="+d_id+";"
     list_e = [models.Employee(e.id, e.employee_name, e.employee_surname) for e in models.Employee.objects.raw(query)]
     return list_e
+
+
+def select_milestone(p_id):
+    query = "SELECT milestone_name, milestone_end_at, milestone_status, milestone_note FROM webapp_milestone WHERE milestone_project_id ="+p_id+";"
+
+    list_task = [models.Milestone(m.milestone_name, m.milestone_end_at, m.milestone_status, m.milestone_note) for m in models.Milestone.objects.raw(query)]
+    return list_task
+
+
+def country_company():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT company_country, count(company_country) FROM webapp_company GROUP BY company_country ORDER BY company_country")
+        list = dictfetchall(cursor)
+        print (list)
+        return list

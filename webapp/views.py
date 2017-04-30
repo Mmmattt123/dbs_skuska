@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from . import selects, inserts, models, inputforms
 import datetime
-from django.db import connection
+from django.db import connection, transaction
 
 # import sys
 
@@ -25,7 +25,8 @@ def index(request):
                                                  'previous_company_form': previous_form,
                                                  'find_company': inputforms.find_company(),
                                                  'add_company': inputforms.company_form(),
-                                                 'latest_companies': selects.select_latest_company()})
+                                                 'latest_companies': selects.select_latest_company(),
+                                                 'country_analyse': selects.country_company()})
 
 
 def insert(request):
@@ -223,14 +224,20 @@ def project_schedule(request, **id):
         p_id = request.GET.get('project_id')
     project = models.Project.objects.filter(id=p_id)
     print(selects.todo_task(p_id), selects.in_progress_task(p_id), selects.finished_task(p_id))
+    remaining = 100
+    done = 0
+    if (len(selects.todo_task(p_id)) + len(selects.in_progress_task(p_id)) + len(selects.finished_task(p_id))) :
+        done= len(selects.finished_task(p_id)) / (len(selects.todo_task(p_id)) + len(selects.in_progress_task(p_id)) + len(selects.finished_task(p_id))) * 100
+        remaining = (1-(len(selects.finished_task(p_id))/(len(selects.todo_task(p_id))+len(selects.in_progress_task(p_id))+len(selects.finished_task(p_id)))))*100
     return render(request, 'webapp/project_view.html',
                       {'add_task': inputforms.add_task,
                        'todo': selects.todo_task(p_id),
                        'in_progress': selects.in_progress_task(p_id),
                        'finished': selects.finished_task(p_id),
                        'project': project[0],
-                       'done': len(selects.finished_task(p_id))/(len(selects.todo_task(p_id))+len(selects.in_progress_task(p_id))+len(selects.finished_task(p_id)))*100,
-                       'remaining': (1-(len(selects.finished_task(p_id))/(len(selects.todo_task(p_id))+len(selects.in_progress_task(p_id))+len(selects.finished_task(p_id)))))*100,
+                       'done': done,
+                       'remaining':remaining
+                       # 'milestones': selects.select_milestone(p_id)
                        #'manager': project.project_manager.manager_name+project.project_manager.manager_surname,
                       # 'Owner':
                       })
@@ -250,13 +257,42 @@ def update_task(request):
 def department_schedule(request):
     if request.GET:
         d_id = request.GET.get('department')
-        department = models.Department.objects.filter(id=d_id)
-        # print(department)
-        # c_id = department.department_company
-        # departments = selects.select_departments(c_id)
+        c_id = request.GET.get('company')
+        department = models.Department.objects.raw("SELECT id, department_name, department_address, department_company_id, department_zipcode FROM webapp_department WHERE id = %s",[d_id])
+        print(department)
+        departments = selects.select_departments(c_id)
 
         return render(request, 'webapp/department_schedule.html',
                       {'department': department,
-                       # 'departments': departments,
-                       'employees': selects.select_employee(d_id)
+                       'departments': departments,
+                       'employees': selects.select_employee(d_id),
+                       'current': d_id,
                        })
+
+@transaction.atomic
+def department_merge(request):
+    if request.GET:
+
+        nd_id = request.GET.get('new')
+        cd_id = request.GET.get('current')
+        if nd_id == cd_id:
+            return index(request)
+        prevd = models.Department.objects.filter(id=cd_id)
+        new = models.Department.objects.filter(id = cd_id)
+        name = prevd[0].department_name
+
+        connection.cursor().execute("BEGIN; UPDATE webapp_employee SET employee_department_id = "+nd_id+" WHERE employee_department_id ="+cd_id+"; UPDATE webapp_department SET department_name = substring(department_name ||' '||'&'||' "+name+"',0,24 )WHERE id= "+nd_id+";")
+
+        # pre skusobne ucely som nepridal to, ze sa povodne oddelenie vymaze
+
+
+
+        # try:
+        #     connection.cursor.execute("UPDATE webapp_employee SET employee_department = "+nd_id+" WHERE employee_department="+cd_id+";")
+        #     new.department_name += name
+        #     new.save()
+        # except IntegrityError:
+        #     transaction.savepoint_rollback(save_point)
+        #     print("roled_Back")
+        return index(request)
+

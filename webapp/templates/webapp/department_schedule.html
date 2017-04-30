@@ -11,8 +11,16 @@
 </head>
 <body>
 <div class="ui container">
-	<div class="iu divided items">
+<div class="ui segment">
+    <div class="ui header">{{department.department_name}}</div>
+    <span>{{department.department_city}}</span>
+    <span>{{department.department_address}}</span>
+    <span>{{department.department_zipcode}}</span>
+
+    <h2 class="ui header">Depatrmentst for merge:</h2>
+    <div class="ui divided items">
         {% for d in departments %}
+        {% if d.id != current %}
         <div class="ui item">
             <div class="content">
                 <h2 class="header">{{d.department_name}}</h2>
@@ -22,13 +30,17 @@
                 <span>{{d.department_address}}</span>
                 <span>{{d.department_zipcode}}</span>
                 <form method="get" action="merge_departments">
-                <button class="ui right floated primary button">MERGE</button>
+                    <input name="current" value="{{ current }}" style="display: none">
+                <button class="ui right floated primary button" name="new" value="{{d.id}}">MERGE</button>
                 </form>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
-</div>
+
+    <div class="ui segment">
+        <div class="ui center aligned header">Employees:</div>
 <div class="ui four cards">
                 {% if not employees %}
                     <h4 class="ui center aligned icon header"> Department has no Employee yet...</h4>
@@ -36,11 +48,12 @@
                 {% for e in employees %}
                     <div class="card">
                         <div class="content">
-                            <div class="header"> {{e.employee_name}} {{employee_surname}}</div>
+                            <div class="header"> {{e.employee_name}} {{e.employee_surname}}</div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-
+    </div>
+</div>
 </body>
 </html>

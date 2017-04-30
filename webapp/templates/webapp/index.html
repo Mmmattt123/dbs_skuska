@@ -107,6 +107,17 @@
                 {% endfor %}
             </div>
     </div>
+        <div class="ui divided items">
+            <div class="ui center aligned header">Countries shedule</div>
+            {% for c in country_analyse %}
+            <div class="ui item">
+
+	            <div class="content">
+                    <div class="header">{{c.company_country}}:  {{c.count}} (companies)</div>
+                    </div>
+            </div>
+            {% endfor %}
+        </div>
     <div class="ui page dimmer delete">
         <div class="content">
             <div class="center">

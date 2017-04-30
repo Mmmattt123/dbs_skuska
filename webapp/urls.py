@@ -19,4 +19,5 @@ urlpatterns = [
 	url(r'project_shedule',views.project_schedule),
 	url(r'update_task',views.update_task),
 	url(r'department_schedule',views.department_schedule),
+	url(r'merge_departments',views.department_merge),
 ]
